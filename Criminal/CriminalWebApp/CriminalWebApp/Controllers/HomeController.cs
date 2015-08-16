@@ -87,8 +87,8 @@ namespace CriminalWebApp.Controllers
                 string x = collection["WWWSADASD"];
                 var user = UserManager.FindById(User.Identity.GetUserId());
                 CriminalServiceReference.ServiceCriminalClient serviceCriminal = new CriminalServiceReference.ServiceCriminalClient();
-                result = serviceCriminal.SearchCriminalList(user.Email, searchTerm, name, ageStart, ageEnd, idSexType, idCountry);
-
+                //result = serviceCriminal.SearchCriminalList(user.Email, searchTerm, name, ageStart, ageEnd, idSexType, idCountry);
+                result = new CriminalApplication().serviceCriminal.ExecuteSearch(user.Email, searchTerm, name, ageStart, ageEnd, idSexType, idCountry);
                 // TODO: Add update logic here
                 if (result)
                 {

@@ -1,6 +1,10 @@
 ﻿using Domain.Entity;
+using iTextSharp.text;
+using iTextSharp.text.html.simpleparser;
+using iTextSharp.text.pdf;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Mail;
@@ -15,12 +19,13 @@ namespace Domain.Services
         public static bool SendEmail(List<Criminal> lstCriminal, string emailTo)
         {
             string message = FillMessage(lstCriminal);
-            return SendEmail("Criminal Search Result", emailTo, message);
+            return SendEmail("Criminal Search Result", emailTo, message,true);
         }
-        private static bool SendEmail(string subject, string to, string message)
+        private static bool SendEmail(string subject, string to, string message,bool pdf)
         {
             try
             {
+                
                 MailMessage objEmail = new MailMessage();
                 objEmail.From = new MailAddress("sitegerenciadoremail@gmail.com");
                 //objEmail.ReplyTo = "";
@@ -29,7 +34,16 @@ namespace Domain.Services
                 objEmail.Priority = MailPriority.Normal;
                 objEmail.IsBodyHtml = true;
                 objEmail.Subject = subject;
-                objEmail.Body = message;
+                
+                if (pdf)
+                {
+                    GenerateAttachment(message, objEmail);
+                    objEmail.Body = " In attachment the results of your criminal search";
+                }
+                else 
+                {
+                    objEmail.Body = message;
+                }
                 objEmail.SubjectEncoding = Encoding.GetEncoding("ISO-8859-1");
                 objEmail.BodyEncoding = Encoding.GetEncoding("ISO-8859-1");
                 SmtpClient objSmtp = new SmtpClient();
@@ -40,11 +54,30 @@ namespace Domain.Services
                 objSmtp.Send(objEmail);
 
                 return true;
+
             }
             catch (Exception ex)
             {
                 log.Error(ex, ex.Message, null);
                 return false;
+            }
+        }
+
+        private static void GenerateAttachment(string message, MailMessage objEmail)
+        {
+            StringReader sr = new StringReader(message);
+
+            Document pdfDoc = new Document(PageSize.A4, 10f, 10f, 10f, 0f);
+            HTMLWorker htmlparser = new HTMLWorker(pdfDoc);
+            using (MemoryStream memoryStream = new MemoryStream())
+            {
+                PdfWriter writer = PdfWriter.GetInstance(pdfDoc, memoryStream);
+                pdfDoc.Open();
+                htmlparser.Parse(sr);
+                pdfDoc.Close();
+                byte[] bytes = memoryStream.ToArray();
+                memoryStream.Close();
+                objEmail.Attachments.Add(new Attachment(new MemoryStream(bytes), "SearchResult.pdf"));
             }
         }
         private static String FillMessage(List<Criminal> lstCriminal)
