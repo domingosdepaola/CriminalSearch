@@ -1,0 +1,554 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="CriminalModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Adress">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Street" Type="varchar" MaxLength="200" />
+          <Property Name="PostalCode" Type="varchar" MaxLength="10" />
+          <Property Name="Number" Type="int" />
+          <Property Name="Complement" Type="varchar" MaxLength="200" />
+          <Property Name="IdCity" Type="int" />
+        </EntityType>
+        <EntityType Name="City">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Description" Type="varchar" MaxLength="200" />
+          <Property Name="IdState" Type="int" />
+        </EntityType>
+        <EntityType Name="Country">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Description" Type="varchar" MaxLength="200" />
+        </EntityType>
+        <EntityType Name="CrimesHistory">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="IdCrimeType" Type="int" />
+          <Property Name="IdCrimeAdress" Type="int" />
+          <Property Name="IdCriminal" Type="uniqueidentifier" />
+          <Property Name="Date" Type="datetime" />
+        </EntityType>
+        <EntityType Name="CrimeTypes">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Description" Type="varchar" MaxLength="200" />
+        </EntityType>
+        <EntityType Name="Criminal">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="Name" Type="varchar" MaxLength="200" />
+          <Property Name="Age" Type="int" />
+          <Property Name="height" Type="int" />
+          <Property Name="weight" Type="int" />
+          <Property Name="IdSexType" Type="int" />
+          <Property Name="IdAdress" Type="int" />
+          <Property Name="IdentificationDocument" Type="varchar" MaxLength="30" />
+        </EntityType>
+        <EntityType Name="SexType">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Description" Type="varchar" MaxLength="10" />
+        </EntityType>
+        <EntityType Name="State">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Description" Type="varchar" MaxLength="200" />
+          <Property Name="IdCountry" Type="int" />
+        </EntityType>
+        <Association Name="FK_Adress_City">
+          <End Role="City" Type="Self.City" Multiplicity="0..1" />
+          <End Role="Adress" Type="Self.Adress" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="City">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Adress">
+              <PropertyRef Name="IdCity" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_City_State">
+          <End Role="State" Type="Self.State" Multiplicity="0..1" />
+          <End Role="City" Type="Self.City" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="State">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="City">
+              <PropertyRef Name="IdState" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CrimesHistory_Adress">
+          <End Role="Adress" Type="Self.Adress" Multiplicity="0..1" />
+          <End Role="CrimesHistory" Type="Self.CrimesHistory" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Adress">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="CrimesHistory">
+              <PropertyRef Name="IdCrimeAdress" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CrimesHistory_CrimeTypes">
+          <End Role="CrimeTypes" Type="Self.CrimeTypes" Multiplicity="0..1" />
+          <End Role="CrimesHistory" Type="Self.CrimesHistory" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CrimeTypes">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="CrimesHistory">
+              <PropertyRef Name="IdCrimeType" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CrimesHistory_Criminal">
+          <End Role="Criminal" Type="Self.Criminal" Multiplicity="0..1" />
+          <End Role="CrimesHistory" Type="Self.CrimesHistory" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Criminal">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="CrimesHistory">
+              <PropertyRef Name="IdCriminal" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Criminal_Adress">
+          <End Role="Adress" Type="Self.Adress" Multiplicity="0..1" />
+          <End Role="Criminal" Type="Self.Criminal" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Adress">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Criminal">
+              <PropertyRef Name="IdAdress" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Criminal_SexType">
+          <End Role="SexType" Type="Self.SexType" Multiplicity="0..1" />
+          <End Role="Criminal" Type="Self.Criminal" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SexType">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Criminal">
+              <PropertyRef Name="IdSexType" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_State_Country">
+          <End Role="Country" Type="Self.Country" Multiplicity="0..1" />
+          <End Role="State" Type="Self.State" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Country">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="State">
+              <PropertyRef Name="IdCountry" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="CriminalModelStoreContainer">
+          <EntitySet Name="Adress" EntityType="Self.Adress" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="City" EntityType="Self.City" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Country" EntityType="Self.Country" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="CrimesHistory" EntityType="Self.CrimesHistory" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="CrimeTypes" EntityType="Self.CrimeTypes" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Criminal" EntityType="Self.Criminal" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="SexType" EntityType="Self.SexType" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="State" EntityType="Self.State" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_Adress_City" Association="Self.FK_Adress_City">
+            <End Role="City" EntitySet="City" />
+            <End Role="Adress" EntitySet="Adress" />
+          </AssociationSet>
+          <AssociationSet Name="FK_City_State" Association="Self.FK_City_State">
+            <End Role="State" EntitySet="State" />
+            <End Role="City" EntitySet="City" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CrimesHistory_Adress" Association="Self.FK_CrimesHistory_Adress">
+            <End Role="Adress" EntitySet="Adress" />
+            <End Role="CrimesHistory" EntitySet="CrimesHistory" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CrimesHistory_CrimeTypes" Association="Self.FK_CrimesHistory_CrimeTypes">
+            <End Role="CrimeTypes" EntitySet="CrimeTypes" />
+            <End Role="CrimesHistory" EntitySet="CrimesHistory" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CrimesHistory_Criminal" Association="Self.FK_CrimesHistory_Criminal">
+            <End Role="Criminal" EntitySet="Criminal" />
+            <End Role="CrimesHistory" EntitySet="CrimesHistory" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Criminal_Adress" Association="Self.FK_Criminal_Adress">
+            <End Role="Adress" EntitySet="Adress" />
+            <End Role="Criminal" EntitySet="Criminal" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Criminal_SexType" Association="Self.FK_Criminal_SexType">
+            <End Role="SexType" EntitySet="SexType" />
+            <End Role="Criminal" EntitySet="Criminal" />
+          </AssociationSet>
+          <AssociationSet Name="FK_State_Country" Association="Self.FK_State_Country">
+            <End Role="Country" EntitySet="Country" />
+            <End Role="State" EntitySet="State" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="CriminalModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityContainer Name="CriminalEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Adress" EntityType="CriminalModel.Adress" />
+          <EntitySet Name="City" EntityType="CriminalModel.City" />
+          <EntitySet Name="Country" EntityType="CriminalModel.Country" />
+          <EntitySet Name="CrimesHistory" EntityType="CriminalModel.CrimesHistory" />
+          <EntitySet Name="CrimeTypes" EntityType="CriminalModel.CrimeTypes" />
+          <EntitySet Name="Criminal" EntityType="CriminalModel.Criminal" />
+          <EntitySet Name="SexType" EntityType="CriminalModel.SexType" />
+          <EntitySet Name="State" EntityType="CriminalModel.State" />
+          <AssociationSet Name="FK_Adress_City" Association="CriminalModel.FK_Adress_City">
+            <End Role="City" EntitySet="City" />
+            <End Role="Adress" EntitySet="Adress" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CrimesHistory_Adress" Association="CriminalModel.FK_CrimesHistory_Adress">
+            <End Role="Adress" EntitySet="Adress" />
+            <End Role="CrimesHistory" EntitySet="CrimesHistory" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Criminal_Adress" Association="CriminalModel.FK_Criminal_Adress">
+            <End Role="Adress" EntitySet="Adress" />
+            <End Role="Criminal" EntitySet="Criminal" />
+          </AssociationSet>
+          <AssociationSet Name="FK_City_State" Association="CriminalModel.FK_City_State">
+            <End Role="State" EntitySet="State" />
+            <End Role="City" EntitySet="City" />
+          </AssociationSet>
+          <AssociationSet Name="FK_State_Country" Association="CriminalModel.FK_State_Country">
+            <End Role="Country" EntitySet="Country" />
+            <End Role="State" EntitySet="State" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CrimesHistory_CrimeTypes" Association="CriminalModel.FK_CrimesHistory_CrimeTypes">
+            <End Role="CrimeTypes" EntitySet="CrimeTypes" />
+            <End Role="CrimesHistory" EntitySet="CrimesHistory" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CrimesHistory_Criminal" Association="CriminalModel.FK_CrimesHistory_Criminal">
+            <End Role="Criminal" EntitySet="Criminal" />
+            <End Role="CrimesHistory" EntitySet="CrimesHistory" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Criminal_SexType" Association="CriminalModel.FK_Criminal_SexType">
+            <End Role="SexType" EntitySet="SexType" />
+            <End Role="Criminal" EntitySet="Criminal" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="Adress">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Street" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="PostalCode" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="Number" Type="Int32" />
+          <Property Name="Complement" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="IdCity" Type="Int32" />
+          <NavigationProperty Name="City" Relationship="CriminalModel.FK_Adress_City" FromRole="Adress" ToRole="City" />
+          <NavigationProperty Name="CrimesHistory" Relationship="CriminalModel.FK_CrimesHistory_Adress" FromRole="Adress" ToRole="CrimesHistory" />
+          <NavigationProperty Name="Criminal" Relationship="CriminalModel.FK_Criminal_Adress" FromRole="Adress" ToRole="Criminal" />
+        </EntityType>
+        <EntityType Name="City">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Description" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="IdState" Type="Int32" />
+          <NavigationProperty Name="Adress" Relationship="CriminalModel.FK_Adress_City" FromRole="City" ToRole="Adress" />
+          <NavigationProperty Name="State" Relationship="CriminalModel.FK_City_State" FromRole="City" ToRole="State" />
+        </EntityType>
+        <EntityType Name="Country">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Description" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="State" Relationship="CriminalModel.FK_State_Country" FromRole="Country" ToRole="State" />
+        </EntityType>
+        <EntityType Name="CrimesHistory">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="IdCrimeType" Type="Int32" />
+          <Property Name="IdCrimeAdress" Type="Int32" />
+          <Property Name="IdCriminal" Type="Guid" />
+          <NavigationProperty Name="Adress" Relationship="CriminalModel.FK_CrimesHistory_Adress" FromRole="CrimesHistory" ToRole="Adress" />
+          <NavigationProperty Name="CrimeTypes" Relationship="CriminalModel.FK_CrimesHistory_CrimeTypes" FromRole="CrimesHistory" ToRole="CrimeTypes" />
+          <NavigationProperty Name="Criminal" Relationship="CriminalModel.FK_CrimesHistory_Criminal" FromRole="CrimesHistory" ToRole="Criminal" />
+          <Property Name="Date" Type="DateTime" Precision="3" />
+        </EntityType>
+        <EntityType Name="CrimeTypes">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Description" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="CrimesHistory" Relationship="CriminalModel.FK_CrimesHistory_CrimeTypes" FromRole="CrimeTypes" ToRole="CrimesHistory" />
+        </EntityType>
+        <EntityType Name="Criminal">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Guid" Nullable="false" />
+          <Property Name="Name" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="Age" Type="Int32" />
+          <Property Name="height" Type="Int32" />
+          <Property Name="weight" Type="Int32" />
+          <Property Name="IdSexType" Type="Int32" />
+          <Property Name="IdAdress" Type="Int32" />
+          <Property Name="IdentificationDocument" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Adress" Relationship="CriminalModel.FK_Criminal_Adress" FromRole="Criminal" ToRole="Adress" />
+          <NavigationProperty Name="CrimesHistory" Relationship="CriminalModel.FK_CrimesHistory_Criminal" FromRole="Criminal" ToRole="CrimesHistory" />
+          <NavigationProperty Name="SexType" Relationship="CriminalModel.FK_Criminal_SexType" FromRole="Criminal" ToRole="SexType" />
+        </EntityType>
+        <EntityType Name="SexType">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Description" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Criminal" Relationship="CriminalModel.FK_Criminal_SexType" FromRole="SexType" ToRole="Criminal" />
+        </EntityType>
+        <EntityType Name="State">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Description" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="IdCountry" Type="Int32" />
+          <NavigationProperty Name="City" Relationship="CriminalModel.FK_City_State" FromRole="State" ToRole="City" />
+          <NavigationProperty Name="Country" Relationship="CriminalModel.FK_State_Country" FromRole="State" ToRole="Country" />
+        </EntityType>
+        <Association Name="FK_Adress_City">
+          <End Type="CriminalModel.City" Role="City" Multiplicity="0..1" />
+          <End Type="CriminalModel.Adress" Role="Adress" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="City">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Adress">
+              <PropertyRef Name="IdCity" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CrimesHistory_Adress">
+          <End Type="CriminalModel.Adress" Role="Adress" Multiplicity="0..1" />
+          <End Type="CriminalModel.CrimesHistory" Role="CrimesHistory" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Adress">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="CrimesHistory">
+              <PropertyRef Name="IdCrimeAdress" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Criminal_Adress">
+          <End Type="CriminalModel.Adress" Role="Adress" Multiplicity="0..1" />
+          <End Type="CriminalModel.Criminal" Role="Criminal" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Adress">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Criminal">
+              <PropertyRef Name="IdAdress" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_City_State">
+          <End Type="CriminalModel.State" Role="State" Multiplicity="0..1" />
+          <End Type="CriminalModel.City" Role="City" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="State">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="City">
+              <PropertyRef Name="IdState" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_State_Country">
+          <End Type="CriminalModel.Country" Role="Country" Multiplicity="0..1" />
+          <End Type="CriminalModel.State" Role="State" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Country">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="State">
+              <PropertyRef Name="IdCountry" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CrimesHistory_CrimeTypes">
+          <End Type="CriminalModel.CrimeTypes" Role="CrimeTypes" Multiplicity="0..1" />
+          <End Type="CriminalModel.CrimesHistory" Role="CrimesHistory" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CrimeTypes">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="CrimesHistory">
+              <PropertyRef Name="IdCrimeType" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CrimesHistory_Criminal">
+          <End Type="CriminalModel.Criminal" Role="Criminal" Multiplicity="0..1" />
+          <End Type="CriminalModel.CrimesHistory" Role="CrimesHistory" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Criminal">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="CrimesHistory">
+              <PropertyRef Name="IdCriminal" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Criminal_SexType">
+          <End Type="CriminalModel.SexType" Role="SexType" Multiplicity="0..1" />
+          <End Type="CriminalModel.Criminal" Role="Criminal" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SexType">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Criminal">
+              <PropertyRef Name="IdSexType" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="CriminalModelStoreContainer" CdmEntityContainer="CriminalEntities">
+          <EntitySetMapping Name="Adress">
+            <EntityTypeMapping TypeName="CriminalModel.Adress">
+              <MappingFragment StoreEntitySet="Adress">
+                <ScalarProperty Name="IdCity" ColumnName="IdCity" />
+                <ScalarProperty Name="Complement" ColumnName="Complement" />
+                <ScalarProperty Name="Number" ColumnName="Number" />
+                <ScalarProperty Name="PostalCode" ColumnName="PostalCode" />
+                <ScalarProperty Name="Street" ColumnName="Street" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="City">
+            <EntityTypeMapping TypeName="CriminalModel.City">
+              <MappingFragment StoreEntitySet="City">
+                <ScalarProperty Name="IdState" ColumnName="IdState" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Country">
+            <EntityTypeMapping TypeName="CriminalModel.Country">
+              <MappingFragment StoreEntitySet="Country">
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="CrimesHistory">
+            <EntityTypeMapping TypeName="CriminalModel.CrimesHistory">
+              <MappingFragment StoreEntitySet="CrimesHistory">
+                <ScalarProperty Name="Date" ColumnName="Date" />
+                <ScalarProperty Name="IdCriminal" ColumnName="IdCriminal" />
+                <ScalarProperty Name="IdCrimeAdress" ColumnName="IdCrimeAdress" />
+                <ScalarProperty Name="IdCrimeType" ColumnName="IdCrimeType" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="CrimeTypes">
+            <EntityTypeMapping TypeName="CriminalModel.CrimeTypes">
+              <MappingFragment StoreEntitySet="CrimeTypes">
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Criminal">
+            <EntityTypeMapping TypeName="CriminalModel.Criminal">
+              <MappingFragment StoreEntitySet="Criminal">
+                <ScalarProperty Name="IdentificationDocument" ColumnName="IdentificationDocument" />
+                <ScalarProperty Name="IdAdress" ColumnName="IdAdress" />
+                <ScalarProperty Name="IdSexType" ColumnName="IdSexType" />
+                <ScalarProperty Name="weight" ColumnName="weight" />
+                <ScalarProperty Name="height" ColumnName="height" />
+                <ScalarProperty Name="Age" ColumnName="Age" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="SexType">
+            <EntityTypeMapping TypeName="CriminalModel.SexType">
+              <MappingFragment StoreEntitySet="SexType">
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="State">
+            <EntityTypeMapping TypeName="CriminalModel.State">
+              <MappingFragment StoreEntitySet="State">
+                <ScalarProperty Name="IdCountry" ColumnName="IdCountry" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

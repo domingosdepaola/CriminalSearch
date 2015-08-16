@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="5b7787ff350148b0bb6462ad00f771d1" Name="Diagram1">
+        <EntityTypeShape EntityType="CriminalModel.Adress" Width="1.5" PointX="7.5" PointY="3.375" />
+        <EntityTypeShape EntityType="CriminalModel.City" Width="1.5" PointX="5.25" PointY="3.75" />
+        <EntityTypeShape EntityType="CriminalModel.Country" Width="1.5" PointX="0.75" PointY="3.875" />
+        <EntityTypeShape EntityType="CriminalModel.CrimesHistory" Width="1.5" PointX="9.75" PointY="3.5" />
+        <EntityTypeShape EntityType="CriminalModel.CrimeTypes" Width="1.5" PointX="7.5" PointY="0.75" />
+        <EntityTypeShape EntityType="CriminalModel.Criminal" Width="1.5" PointX="12.75" PointY="3.125" />
+        <EntityTypeShape EntityType="CriminalModel.SexType" Width="1.5" PointX="10.5" PointY="0.875" />
+        <EntityTypeShape EntityType="CriminalModel.State" Width="1.5" PointX="3" PointY="3.75" />
+        <AssociationConnector Association="CriminalModel.FK_Adress_City" />
+        <AssociationConnector Association="CriminalModel.FK_CrimesHistory_Adress" />
+        <AssociationConnector Association="CriminalModel.FK_Criminal_Adress" />
+        <AssociationConnector Association="CriminalModel.FK_City_State" />
+        <AssociationConnector Association="CriminalModel.FK_State_Country" />
+        <AssociationConnector Association="CriminalModel.FK_CrimesHistory_CrimeTypes" />
+        <AssociationConnector Association="CriminalModel.FK_CrimesHistory_Criminal" />
+        <AssociationConnector Association="CriminalModel.FK_Criminal_SexType" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

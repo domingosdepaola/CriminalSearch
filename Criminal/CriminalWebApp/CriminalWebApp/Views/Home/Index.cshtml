@@ -1,0 +1,61 @@
+﻿@{
+    ViewBag.Title = "Home Page";
+}
+
+<div class="jumbotron">
+    <h1>Criminals Search</h1>
+    <p class="lead">Search Criminals Web Site. Please complete the fields an click the button. You will receive the results by e-mail.</p>
+    <p><a href="https://en.wikipedia.org/wiki/Crime_science" class="btn btn-primary btn-large">Learn more &raquo;</a></p>
+</div>
+@if (User.Identity.IsAuthenticated)
+    {
+<script>
+    function Do() {
+        $.ajax({
+            // method: 'POST', <-- remove this
+            type: 'POST', // <-- add this
+            url: '@Url.Action("SearchCriminals", "Home")',
+            dataType: 'json',
+            data: {
+                'Search': $("#txtSearchTerm").val(),
+                'Name': $("#txtName").val(),
+                'AgeStart': $("#txtAgeStart").val(),
+                'AgeEnd': $("#txtAgeEnd").val(),
+                'SexType': $("#DropdownSex").val(),
+                'Country': $("#DropdownCountry").val()
+                
+            },
+            success: function (data, textStatus, jqXHR) {
+                //the data here is returned from your controller action method
+                lblResult.innerText = data ;
+            },
+            error: function () {
+                alert('Ops, something wrong... try again. Sory.');
+            }
+        });
+    }
+</script>
+<div class="row">
+    <div class="space">
+        Generical Search Field: <input type="text" class="form-control" id="txtSearchTerm" />
+    </div>
+    <div class="space">Name : <input type="text" class="form-control" id="txtName" /> </div>
+    <div class="space">
+        Age : <input type="text" maxlength="3" id="txtAgeStart" class="ageField"> to <input class="ageField" maxlength="3" type="text" id="txtAgeEnd" />
+    </div>
+    <div class="space">
+        Country :  @Html.DropDownList("DropdownCountry", "All")
+    </div>
+    <div class="space">
+        Sex :  @Html.DropDownList("DropdownSex", "All")
+    </div>
+    <input type="button" class="btn btn-default" value="Search Criminals" onclick="Do()" />
+    <label id="lblResult" />
+</div>
+    }
+else 
+{
+    <div class="row">
+        <span>Please login to search</span>
+    </div>
+}
