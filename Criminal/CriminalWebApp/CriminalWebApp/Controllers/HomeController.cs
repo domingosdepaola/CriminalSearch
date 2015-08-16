@@ -7,7 +7,7 @@ using System.Web.Mvc;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
-using Application; 
+using Application;
 
 namespace CriminalWebApp.Controllers
 {
@@ -56,28 +56,31 @@ namespace CriminalWebApp.Controllers
         [HttpPost]
         public ActionResult SearchCriminals(FormCollection collection)
         {
-            bool result = false;
+
+            string errorMessage = "Something wrong, verify the inputs. Remeber, the age is from 16 to 100";
+            string okMessage = "Ok, you will receive an email with the informations";
             try
             {
+                bool result = false;
                 string searchTerm = collection["Search"];
                 string name = collection["Name"];
                 int? ageStart = null;
                 int? ageEnd = null;
                 int? idCountry = null;
                 int? idSexType = null;
-                if (collection["AgeStart"] != string.Empty) 
+                if (collection["AgeStart"] != string.Empty)
                 {
-                    ageStart = Convert.ToInt32(collection["AgeStart"]);  
+                    ageStart = Convert.ToInt32(collection["AgeStart"]);
                 }
-                if (collection["AgeEnd"] != string.Empty) 
+                if (collection["AgeEnd"] != string.Empty)
                 {
                     ageEnd = Convert.ToInt32(collection["AgeEnd"]);
                 }
-                if (collection["Country"] != string.Empty) 
+                if (collection["Country"] != string.Empty)
                 {
                     idCountry = Convert.ToInt32(collection["Country"]);
                 }
-                if(collection["SexType"] != string.Empty)
+                if (collection["SexType"] != string.Empty)
                 {
                     idSexType = Convert.ToInt32(collection["SexType"]);
                 }
@@ -87,12 +90,18 @@ namespace CriminalWebApp.Controllers
                 result = serviceCriminal.SearchCriminalList(user.Email, searchTerm, name, ageStart, ageEnd, idSexType, idCountry);
 
                 // TODO: Add update logic here
-
-                return Json(result);
+                if (result)
+                {
+                    return Json(okMessage);
+                }
+                else
+                {
+                    return Json(errorMessage);
+                }
             }
             catch
             {
-                return Json(result);
+                return Json(errorMessage);
             }
         }
     }

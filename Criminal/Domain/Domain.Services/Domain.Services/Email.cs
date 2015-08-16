@@ -138,7 +138,7 @@ namespace Domain.Services
                 }
                 else
                 {
-                    sb.Append("Sorry, your search doesnt have any results. Remeber, the age is from 16 to 100.");
+                    sb.Append("Your search doesnt have any results.");
                 }
                 return sb.ToString();
             }
